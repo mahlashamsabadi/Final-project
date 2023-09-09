@@ -35,10 +35,10 @@ def classifyNews(request):
                 result = classifyWithXlmr(data['text'])
         print(result)
         
-        if result[0] == 1:
-            result = 'fake'
-        else:
+        if result[0] == 0:
             result = 'fact'
+        else:
+            result = 'fake'
         print(result)
         messages.add_message(request, messages.INFO, f"This news is '{result}'")
         return render(request , 'page.html',{'form':form})

@@ -17,11 +17,11 @@ import hazm
 import re
 
 def classifyWithAlbert(text):
-    loaded_model = TFBertForSequenceClassification.from_pretrained('D:\\term8\\final_project\\AlbertModel')
-    lines = list(text)
+    # loaded_model = TFBertForSequenceClassification.from_pretrained('D:\\term8\\final_project\\AlbertModel')
+    # # lines = list(text)
     df1 = pd.DataFrame(columns=['text', 'label'])
-    df1.loc[0] = [lines[0], "fact"]
-
+    df1.loc[0] = [text, "fact"]
+    # print(text)
     id_label_map = {
         'fact': 0,
         'fake': 1
@@ -38,15 +38,29 @@ def classifyWithAlbert(text):
     x_test1 = {key: np.array(val) for key, val in x_test1.items()}
     test_dataset1 = tf.data.Dataset.from_tensor_slices((x_test1, y_test1)).batch(VALID_BATCH_SIZE)
 
-    optimizer1 = tf.keras.optimizers.Adam(learning_rate=3e-5)
-    loss1 = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-    loaded_model.compile(optimizer1, loss1)
+    # optimizer1 = tf.keras.optimizers.Adam(learning_rate=3e-5)
+    # loss1 = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+    # loaded_model.compile(optimizer1, loss1)
 
-    ev = loaded_model.evaluate(test_dataset1)
-    print()
-    print(f'Evaluation: {ev}')
-    print()
+    # ev = loaded_model.evaluate(test_dataset1)
+    # print()
+    # print(f'Evaluation: {ev}')
+    # print()
 
-    predictions = loaded_model.predict(x_test1)
+    # predictions = loaded_model.predict(x_test1)
+    # ypred1 = predictions[0].argmax(axis=-1).tolist()
+    # return ypred1
+    LEARNING_RATE = 2e-5
+    MODEL_NAME = "m3hrdadfi/albert-fa-base-v2-clf-digimag"
+    model2 = TFAutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+
+    optimizer = tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE)
+    loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+    metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
+
+    model2.compile(optimizer=optimizer, loss=loss, metrics=[metric])
+
+    model2.load_weights('D:\\term8\\final_project\\Albert\\weights')
+    predictions = model2.predict(x_test1)
     ypred1 = predictions[0].argmax(axis=-1).tolist()
     return ypred1

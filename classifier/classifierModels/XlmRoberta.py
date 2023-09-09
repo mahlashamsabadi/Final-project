@@ -42,10 +42,10 @@ def classifyWithXlmr(text):
     loss1 = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
     loaded_model.compile(optimizer1, loss1)
 
-    ev = loaded_model.evaluate(test_dataset1)
-    print()
-    print(f'Evaluation: {ev}')
-    print()
+    # ev = loaded_model.evaluate(test_dataset1)
+    # print()
+    # print(f'Evaluation: {ev}')
+    # print()
 
     predictions = loaded_model.predict(x_test1)
     ypred1 = predictions[0].argmax(axis=-1).tolist()
